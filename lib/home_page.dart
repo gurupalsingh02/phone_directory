@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.CENTER,
               timeInSecForIosWeb: 1,
-              backgroundColor: Colors.orange,
+              backgroundColor: Colors.black,
               textColor: Colors.white);
         }
       }
@@ -69,7 +69,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     for (int i = 0; i < _contacts.length; i++) {
-      if (_contacts.elementAt(i).phones!.isEmpty) {
+      if (_contacts.elementAt(i).phones!.isEmpty ||
+          _contacts.elementAt(i).displayName!.isEmpty) {
+        ContactsService.deleteContact(_contacts.elementAt(i));
         _contacts.remove(_contacts.elementAt(i));
       }
     }
@@ -91,8 +93,11 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             Container(
                               child: CircleAvatar(
-                                  child: Text(_contacts[index].initials())),
-                            ),
+                                  child: Text(_contacts[index]
+                                      .initials()
+                                      .characters
+                                      .elementAt(0))),
+                            ).p8(),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -112,11 +117,11 @@ class _HomePageState extends State<HomePage> {
                                     .text
                                     .make()
                               ],
-                            ).p12()
+                            )
                           ],
-                        )).color(Colors.grey).make(),
+                        )).color(Colors.grey).roundedSM.p8.make(),
                       ).p4();
-                    }).p12().expand()
+                    }).p8().expand()
               ],
             )
           : CircularProgressIndicator().centered(),
