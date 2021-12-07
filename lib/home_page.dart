@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, unnecessary_null_comparison, non_constant_identifier_names, prefer_is_empty
+// ignore_for_file: prefer_const_constructors, unnecessary_null_comparison, non_constant_identifier_names, prefer_is_empty, list_remove_unrelated_type
 import 'package:flutter/material.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -14,8 +14,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Contact> contacts_search = [];
-  TextEditingController search_controller = new TextEditingController();
+  TextEditingController search_controller = TextEditingController();
+  bool issearching = false;
+  String search_text = "";
   bool contacts_are_loaded = false;
   List<Contact> _contacts = [];
   Future<PermissionStatus> _getPermission() async {
@@ -40,6 +41,7 @@ class _HomePageState extends State<HomePage> {
         final Iterable<Contact> contacts = await ContactsService.getContacts();
         setState(() {
           _contacts = contacts.toList();
+          (VxState.store as MyStore).contacts = _contacts;
           contacts_are_loaded = true;
         });
       } else {
@@ -65,34 +67,42 @@ class _HomePageState extends State<HomePage> {
         }
       }
     });
-    super.initState();
+    search_controller.notifyListeners();
     search_controller.addListener(() {
       search_by_name();
     });
+    super.initState();
   }
 
-  sort_by_name() {}
-  sort_by_number() {}
+  sort_by_surname() {
+    // aditya sharma
+  }
+  sort_by_number() {
+    // abhishek dhanger
+  }
   search_by_name() {
-    contacts_search.addAll(_contacts);
+    List<Contact> contacts_search = [];
     if (search_controller.text.isNotEmpty) {
+      contacts_search.addAll(_contacts);
       contacts_search.retainWhere((contact) {
         return contact.displayName!
             .toLowerCase()
             .contains(search_controller.text.toLowerCase());
       });
+      issearching = true;
+      (VxState.store as MyStore).contacts = contacts_search;
+    } else {
+      (VxState.store as MyStore).contacts = _contacts;
     }
-    (VxState.store as MyStore).contacts = contacts_search;
     setState(() {});
   }
 
-  search_by_number() {}
+  search_by_number() {
+    // krunal patel
+  }
 
   @override
   Widget build(BuildContext context) {
-    bool issearching = search_controller.text.length == 0 ? false : true;
-    (VxState.store as MyStore).contacts =
-        issearching ? contacts_search : _contacts;
     for (int i = 0; i < (VxState.store as MyStore).contacts.length; i++) {
       if ((VxState.store as MyStore).contacts.elementAt(i).phones!.isEmpty ||
           (VxState.store as MyStore)
