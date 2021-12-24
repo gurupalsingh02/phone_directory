@@ -14,6 +14,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<Contact> sorted_contacts = [];
   TextEditingController search_controller = TextEditingController();
   bool issearching = false;
   String search_text = "";
@@ -77,8 +78,12 @@ class _HomePageState extends State<HomePage> {
     // aditya sharma
   }
   sort_by_number() {
+    sorted_contacts.addAll(_contacts);
+
+    var n = _contacts[0].phones!.elementAt(0).value.toString();
     // abhishek dhanger
   }
+
   search_by_name() {
     List<Contact> contacts_search = [];
     if (search_controller.text.isNotEmpty) {
