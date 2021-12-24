@@ -7,19 +7,23 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:permission_asker/permission_asker.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
-
   @override
-  _HomePageState createState() => _HomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   List<Contact> sorted_contacts = [];
+
   TextEditingController search_controller = TextEditingController();
+
   bool issearching = false;
+
   String search_text = "";
+
   bool contacts_are_loaded = false;
+
   List<Contact> _contacts = [];
+
   Future<PermissionStatus> _getPermission() async {
     final PermissionStatus permission = await Permission.contacts.status;
 
@@ -94,30 +98,34 @@ class _HomePageState extends State<HomePage> {
   sort_by_surname() {
     // aditya sharma
   }
-  sort_by_number() {
-    sorted_contacts.addAll(sorted_contacts);
 
-    int n = sorted_contacts.length;
+  sort_by_number() {
+    // sorted_contacts.addAll(sorted_contacts);
+
+    int n = (VxState.store as MyStore).contacts.length;
     bool sorted;
     for (int i = 0; i < n - 1; i++) {
       sorted = true;
       for (int j = 0; j < n - 1 - i; j++) {
-        if (sorted_contacts
+        if ((VxState.store as MyStore)
+                .contacts
                 .elementAt(j)
                 .phones!
                 .elementAt(0)
                 .value
                 .toString()
-                .compareTo(sorted_contacts
+                .compareTo((VxState.store as MyStore)
+                    .contacts
                     .elementAt(j + 1)
                     .phones!
                     .elementAt(0)
                     .value
                     .toString()) >
             0) {
-          Contact temp = sorted_contacts[j];
-          sorted_contacts[j] = sorted_contacts[j + 1];
-          sorted_contacts[j + 1] = temp;
+          Contact temp = (VxState.store as MyStore).contacts[j];
+          (VxState.store as MyStore).contacts[j] =
+              (VxState.store as MyStore).contacts[j + 1];
+          (VxState.store as MyStore).contacts[j + 1] = temp;
           sorted = false;
         }
       }
@@ -146,107 +154,144 @@ class _HomePageState extends State<HomePage> {
     search_by_number() {
       // krunal patel
     }
-
-    @override
-    Widget build(BuildContext context) {
-      for (int i = 0; i < (VxState.store as MyStore).contacts.length; i++) {
-        if ((VxState.store as MyStore).contacts.elementAt(i).phones!.isEmpty ||
-            (VxState.store as MyStore)
-                .contacts
-                .elementAt(i)
-                .displayName!
-                .isEmpty) {
-          ContactsService.deleteContact(
-              (VxState.store as MyStore).contacts.elementAt(i));
-          (VxState.store as MyStore)
-              .contacts
-              .remove((VxState.store as MyStore).contacts.elementAt(i));
-        }
-      }
-      return contacts_are_loaded
-          ? Scaffold(
-              backgroundColor: Colors.white,
-              body: SafeArea(
-                child: Column(
-                  children: [
-                    Container(
-                      child: TextField(
-                        controller: search_controller,
-                        decoration: InputDecoration(
-                            prefixIcon: Icon(
-                              Icons.search,
-                              color: Colors.lightBlue,
-                            ),
-                            labelText: "Search",
-                            border: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.lightBlue))),
-                      ),
-                    ).p16(),
-                    ListView.builder(
-                        itemCount: (VxState.store as MyStore).contacts.length,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          return Card(
-                            child: VxBox(
-                                child: Row(
-                              children: [
-                                Container(
-                                  child: CircleAvatar(
-                                      child: Text((VxState.store as MyStore)
-                                          .contacts[index]
-                                          .initials()
-                                          .characters
-                                          .elementAt(0))),
-                                ).p8(),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    (VxState.store as MyStore)
-                                        .contacts[index]
-                                        .displayName
-                                        .toString()
-                                        .text
-                                        .ellipsis
-                                        .xl
-                                        .bold
-                                        .make(),
-                                  ],
-                                )
-                              ],
-                            )).color(Colors.grey).roundedSM.p8.make().onTap(() {
-                              (VxState.store as MyStore).currentcontact =
-                                  (VxState.store as MyStore).contacts[index];
-                              Navigator.pushNamed(
-                                context,
-                                "/contact",
-                              );
-                            }),
-                          ).p4();
-                        }).p8().expand()
-                  ],
-                ),
-              ).p8())
-          : Material(
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.contacts)
-                        .iconColor(Colors.blue)
-                        .scale(scaleValue: 4)
-                        .p24(),
-                    LinearProgressIndicator().w16(context).p20()
-                  ],
-                ),
-              ),
-            );
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    throw UnimplementedError();
+    for (int i = 0; i < (VxState.store as MyStore).contacts.length; i++) {
+      if ((VxState.store as MyStore).contacts.elementAt(i).phones!.isEmpty ||
+          (VxState.store as MyStore)
+              .contacts
+              .elementAt(i)
+              .displayName!
+              .isEmpty) {
+        ContactsService.deleteContact(
+            (VxState.store as MyStore).contacts.elementAt(i));
+        (VxState.store as MyStore)
+            .contacts
+            .remove((VxState.store as MyStore).contacts.elementAt(i));
+      }
+    }
+    int n = (VxState.store as MyStore).contacts.length;
+    bool sorted;
+    for (int i = 0; i < n - 1; i++) {
+      sorted = true;
+      for (int j = 0; j < n - 1 - i; j++) {
+        if ((VxState.store as MyStore)
+                .contacts
+                .elementAt(j)
+                .phones!
+                .elementAt(0)
+                .value
+                .toString()
+                .compareTo((VxState.store as MyStore)
+                    .contacts
+                    .elementAt(j + 1)
+                    .phones!
+                    .elementAt(0)
+                    .value
+                    .toString()) >
+            0) {
+          Contact temp = (VxState.store as MyStore).contacts[j];
+          (VxState.store as MyStore).contacts[j] =
+              (VxState.store as MyStore).contacts[j + 1];
+          (VxState.store as MyStore).contacts[j + 1] = temp;
+          sorted = false;
+        }
+      }
+      if (sorted) {
+        break;
+      }
+    }
+    (VxState.store as MyStore)
+        .contacts
+        .remove((VxState.store as MyStore).contacts);
+    (VxState.store as MyStore).contacts.addAll(sorted_contacts);
+    return contacts_are_loaded
+        ? Scaffold(
+            backgroundColor: Colors.white,
+            body: SafeArea(
+              child: Column(
+                children: [
+                  Container(
+                    child: TextField(
+                      controller: search_controller,
+                      decoration: InputDecoration(
+                          prefixIcon: Icon(
+                            Icons.search,
+                            color: Colors.lightBlue,
+                          ),
+                          labelText: "Search",
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.lightBlue))),
+                    ),
+                  ).p16(),
+                  ListView.builder(
+                      itemCount: (VxState.store as MyStore).contacts.length,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return Card(
+                          child: VxBox(
+                              child: Row(
+                            children: [
+                              Container(
+                                child: CircleAvatar(
+                                    child: Text((VxState.store as MyStore)
+                                        .contacts[index]
+                                        .initials()
+                                        .characters
+                                        .elementAt(0))),
+                              ).p8(),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  (VxState.store as MyStore)
+                                      .contacts[index]
+                                      .displayName
+                                      .toString()
+                                      .text
+                                      .ellipsis
+                                      .xl
+                                      .bold
+                                      .make(),
+                                  (VxState.store as MyStore)
+                                      .contacts[index]
+                                      .phones!
+                                      .elementAt(0)
+                                      .value
+                                      .toString()
+                                      .text
+                                      .make(),
+                                ],
+                              )
+                            ],
+                          )).color(Colors.grey).roundedSM.p8.make().onTap(() {
+                            (VxState.store as MyStore).currentcontact =
+                                (VxState.store as MyStore).contacts[index];
+                            Navigator.pushNamed(
+                              context,
+                              "/contact",
+                            );
+                          }),
+                        ).p4();
+                      }).p8().expand()
+                ],
+              ),
+            ).p8())
+        : Material(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.contacts)
+                      .iconColor(Colors.blue)
+                      .scale(scaleValue: 4)
+                      .p24(),
+                  LinearProgressIndicator().w16(context).p20()
+                ],
+              ),
+            ),
+          );
   }
 }
