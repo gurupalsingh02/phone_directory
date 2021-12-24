@@ -79,8 +79,6 @@ class _HomePageState extends State<HomePage> {
   }
   sort_by_number() {
     sorted_contacts.addAll(_contacts);
-
-    var n = _contacts[0].phones!.elementAt(0).value.toString();
     // abhishek dhanger
   }
 
