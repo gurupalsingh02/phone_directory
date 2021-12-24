@@ -67,7 +67,6 @@ class _HomePageState extends State<HomePage> {
         }
       }
     });
-    search_controller.notifyListeners();
     search_controller.addListener(() {
       search_by_name();
     });
