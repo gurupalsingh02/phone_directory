@@ -74,14 +74,6 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
-  sort_by_surname() {
-    // aditya sharma
-  }
-  sort_by_number() {
-    sorted_contacts.addAll(_contacts);
-    // abhishek dhanger
-  }
-
   search_by_name() {
     List<Contact> contacts_search = [];
     if (search_controller.text.isNotEmpty) {
@@ -99,102 +91,162 @@ class _HomePageState extends State<HomePage> {
     setState(() {});
   }
 
-  search_by_number() {
-    // krunal patel
+  sort_by_surname() {
+    // aditya sharma
+  }
+  sort_by_number() {
+    sorted_contacts.addAll(sorted_contacts);
+
+    int n = sorted_contacts.length;
+    bool sorted;
+    for (int i = 0; i < n - 1; i++) {
+      sorted = true;
+      for (int j = 0; j < n - 1 - i; j++) {
+        if (sorted_contacts
+                .elementAt(j)
+                .phones!
+                .elementAt(0)
+                .value
+                .toString()
+                .compareTo(sorted_contacts
+                    .elementAt(j + 1)
+                    .phones!
+                    .elementAt(0)
+                    .value
+                    .toString()) >
+            0) {
+          Contact temp = sorted_contacts[j];
+          sorted_contacts[j] = sorted_contacts[j + 1];
+          sorted_contacts[j + 1] = temp;
+          sorted = false;
+        }
+      }
+      if (sorted) {
+        break;
+      }
+      // abhishek dhanger
+    }
+    search_by_name() {
+      List<Contact> contacts_search = [];
+      if (search_controller.text.isNotEmpty) {
+        contacts_search.addAll(_contacts);
+        contacts_search.retainWhere((contact) {
+          return contact.displayName!
+              .toLowerCase()
+              .contains(search_controller.text.toLowerCase());
+        });
+        issearching = true;
+        (VxState.store as MyStore).contacts = contacts_search;
+      } else {
+        (VxState.store as MyStore).contacts = _contacts;
+      }
+      setState(() {});
+    }
+
+    search_by_number() {
+      // krunal patel
+    }
+
+    @override
+    Widget build(BuildContext context) {
+      for (int i = 0; i < (VxState.store as MyStore).contacts.length; i++) {
+        if ((VxState.store as MyStore).contacts.elementAt(i).phones!.isEmpty ||
+            (VxState.store as MyStore)
+                .contacts
+                .elementAt(i)
+                .displayName!
+                .isEmpty) {
+          ContactsService.deleteContact(
+              (VxState.store as MyStore).contacts.elementAt(i));
+          (VxState.store as MyStore)
+              .contacts
+              .remove((VxState.store as MyStore).contacts.elementAt(i));
+        }
+      }
+      return contacts_are_loaded
+          ? Scaffold(
+              backgroundColor: Colors.white,
+              body: SafeArea(
+                child: Column(
+                  children: [
+                    Container(
+                      child: TextField(
+                        controller: search_controller,
+                        decoration: InputDecoration(
+                            prefixIcon: Icon(
+                              Icons.search,
+                              color: Colors.lightBlue,
+                            ),
+                            labelText: "Search",
+                            border: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.lightBlue))),
+                      ),
+                    ).p16(),
+                    ListView.builder(
+                        itemCount: (VxState.store as MyStore).contacts.length,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            child: VxBox(
+                                child: Row(
+                              children: [
+                                Container(
+                                  child: CircleAvatar(
+                                      child: Text((VxState.store as MyStore)
+                                          .contacts[index]
+                                          .initials()
+                                          .characters
+                                          .elementAt(0))),
+                                ).p8(),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    (VxState.store as MyStore)
+                                        .contacts[index]
+                                        .displayName
+                                        .toString()
+                                        .text
+                                        .ellipsis
+                                        .xl
+                                        .bold
+                                        .make(),
+                                  ],
+                                )
+                              ],
+                            )).color(Colors.grey).roundedSM.p8.make().onTap(() {
+                              (VxState.store as MyStore).currentcontact =
+                                  (VxState.store as MyStore).contacts[index];
+                              Navigator.pushNamed(
+                                context,
+                                "/contact",
+                              );
+                            }),
+                          ).p4();
+                        }).p8().expand()
+                  ],
+                ),
+              ).p8())
+          : Material(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.contacts)
+                        .iconColor(Colors.blue)
+                        .scale(scaleValue: 4)
+                        .p24(),
+                    LinearProgressIndicator().w16(context).p20()
+                  ],
+                ),
+              ),
+            );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    for (int i = 0; i < (VxState.store as MyStore).contacts.length; i++) {
-      if ((VxState.store as MyStore).contacts.elementAt(i).phones!.isEmpty ||
-          (VxState.store as MyStore)
-              .contacts
-              .elementAt(i)
-              .displayName!
-              .isEmpty) {
-        ContactsService.deleteContact(
-            (VxState.store as MyStore).contacts.elementAt(i));
-        (VxState.store as MyStore)
-            .contacts
-            .remove((VxState.store as MyStore).contacts.elementAt(i));
-      }
-    }
-    return contacts_are_loaded
-        ? Scaffold(
-            backgroundColor: Colors.white,
-            body: SafeArea(
-              child: Column(
-                children: [
-                  Container(
-                    child: TextField(
-                      controller: search_controller,
-                      decoration: InputDecoration(
-                          prefixIcon: Icon(
-                            Icons.search,
-                            color: Colors.lightBlue,
-                          ),
-                          labelText: "Search",
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.lightBlue))),
-                    ),
-                  ).p16(),
-                  ListView.builder(
-                      itemCount: (VxState.store as MyStore).contacts.length,
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        return Card(
-                          child: VxBox(
-                              child: Row(
-                            children: [
-                              Container(
-                                child: CircleAvatar(
-                                    child: Text((VxState.store as MyStore)
-                                        .contacts[index]
-                                        .initials()
-                                        .characters
-                                        .elementAt(0))),
-                              ).p8(),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  (VxState.store as MyStore)
-                                      .contacts[index]
-                                      .displayName
-                                      .toString()
-                                      .text
-                                      .ellipsis
-                                      .xl
-                                      .bold
-                                      .make(),
-                                ],
-                              )
-                            ],
-                          )).color(Colors.grey).roundedSM.p8.make().onTap(() {
-                            (VxState.store as MyStore).currentcontact =
-                                (VxState.store as MyStore).contacts[index];
-                            Navigator.pushNamed(
-                              context,
-                              "/contact",
-                            );
-                          }),
-                        ).p4();
-                      }).p8().expand()
-                ],
-              ),
-            ).p8())
-        : Material(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.contacts)
-                      .iconColor(Colors.blue)
-                      .scale(scaleValue: 4)
-                      .p24(),
-                  LinearProgressIndicator().w16(context).p20()
-                ],
-              ),
-            ),
-          );
+    // TODO: implement build
+    throw UnimplementedError();
   }
 }
