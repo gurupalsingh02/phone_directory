@@ -164,14 +164,6 @@ class _HomePageState extends State<HomePage> {
                                       .xl
                                       .bold
                                       .make(),
-                                  (VxState.store as MyStore)
-                                      .contacts[index]
-                                      .phones!
-                                      .elementAt(0)
-                                      .value
-                                      .toString()
-                                      .text
-                                      .make()
                                 ],
                               )
                             ],
