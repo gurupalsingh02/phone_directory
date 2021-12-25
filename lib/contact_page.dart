@@ -15,7 +15,14 @@ class ContactPage extends StatelessWidget {
       child: Column(
         children: [
           CircleAvatar(
-                  radius: 40, child: Icon(Icons.contacts).scale(scaleValue: 2))
+                  radius: 80,
+                  child: (VxState.store as MyStore)
+                      .currentcontact
+                      .initials()
+                      .toString()
+                      .text
+                      .make()
+                      .scale(scaleValue: 5))
               .p12(),
           Row(
             children: [
@@ -58,13 +65,6 @@ class ContactPage extends StatelessWidget {
               ),
             ],
           ).py(40),
-          IconButton(
-                  onPressed: () {
-                    ContactsService.deleteContact(
-                        (VxState.store as MyStore).currentcontact);
-                  },
-                  icon: Icon(Icons.delete).scale(scaleValue: 2))
-              .centered()
         ],
       ).py(20),
     ));

@@ -12,8 +12,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<String> list = [
+    "sort by A-Z",
+    "sort by Z-A",
+    "sort by number",
+    "sort by length of contact name"
+  ];
   List<Contact> sorted_contacts = [];
-
   TextEditingController search_controller = TextEditingController();
 
   bool issearching = false;
@@ -78,25 +83,96 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
-  search_by_name() {
-    List<Contact> contacts_search = [];
-    if (search_controller.text.isNotEmpty) {
-      contacts_search.addAll(_contacts);
-      contacts_search.retainWhere((contact) {
-        return contact.displayName!
-            .toLowerCase()
-            .contains(search_controller.text.toLowerCase());
-      });
-      issearching = true;
-      (VxState.store as MyStore).contacts = contacts_search;
-    } else {
-      (VxState.store as MyStore).contacts = _contacts;
+  sort_by_A_to_Z() {
+    int n = (VxState.store as MyStore).contacts.length;
+    bool sorted;
+    for (int i = 0; i < n - 1; i++) {
+      sorted = true;
+      for (int j = 0; j < n - 1 - i; j++) {
+        if (((VxState.store as MyStore)
+                    .contacts
+                    .elementAt(j)
+                    .displayName
+                    .toString())
+                .compareTo((VxState.store as MyStore)
+                    .contacts
+                    .elementAt(j + 1)
+                    .displayName
+                    .toString()) >
+            0) {
+          Contact temp = (VxState.store as MyStore).contacts[j];
+          (VxState.store as MyStore).contacts[j] =
+              (VxState.store as MyStore).contacts[j + 1];
+          (VxState.store as MyStore).contacts[j + 1] = temp;
+          sorted = false;
+        }
+      }
+      if (sorted) {
+        break;
+      }
     }
-    setState(() {});
   }
 
-  sort_by_surname() {
+  sort_by_Z_to_A() {
     // aditya sharma
+    int n = (VxState.store as MyStore).contacts.length;
+    bool sorted;
+    for (int i = 0; i < n - 1; i++) {
+      sorted = true;
+      for (int j = 0; j < n - 1 - i; j++) {
+        if (((VxState.store as MyStore)
+                    .contacts
+                    .elementAt(j)
+                    .displayName
+                    .toString())
+                .compareTo((VxState.store as MyStore)
+                    .contacts
+                    .elementAt(j + 1)
+                    .displayName
+                    .toString()) <
+            0) {
+          Contact temp = (VxState.store as MyStore).contacts[j];
+          (VxState.store as MyStore).contacts[j] =
+              (VxState.store as MyStore).contacts[j + 1];
+          (VxState.store as MyStore).contacts[j + 1] = temp;
+          sorted = false;
+        }
+      }
+      if (sorted) {
+        break;
+      }
+    }
+  }
+
+  sort_by_length_of_name() {
+    int n = (VxState.store as MyStore).contacts.length;
+    bool sorted;
+    for (int i = 0; i < n - 1; i++) {
+      sorted = true;
+      for (int j = 0; j < n - 1 - i; j++) {
+        if ((VxState.store as MyStore)
+                .contacts
+                .elementAt(j)
+                .displayName
+                .toString()
+                .length >
+            (VxState.store as MyStore)
+                .contacts
+                .elementAt(j + 1)
+                .displayName
+                .toString()
+                .length) {
+          Contact temp = (VxState.store as MyStore).contacts[j];
+          (VxState.store as MyStore).contacts[j] =
+              (VxState.store as MyStore).contacts[j + 1];
+          (VxState.store as MyStore).contacts[j + 1] = temp;
+          sorted = false;
+        }
+      }
+      if (sorted) {
+        break;
+      }
+    }
   }
 
   sort_by_number() {
@@ -134,26 +210,27 @@ class _HomePageState extends State<HomePage> {
       }
       // abhishek dhanger
     }
-    search_by_name() {
-      List<Contact> contacts_search = [];
-      if (search_controller.text.isNotEmpty) {
-        contacts_search.addAll(_contacts);
-        contacts_search.retainWhere((contact) {
-          return contact.displayName!
-              .toLowerCase()
-              .contains(search_controller.text.toLowerCase());
-        });
-        issearching = true;
-        (VxState.store as MyStore).contacts = contacts_search;
-      } else {
-        (VxState.store as MyStore).contacts = _contacts;
-      }
-      setState(() {});
-    }
+  }
 
-    search_by_number() {
-      // krunal patel
+  search_by_number() {
+    // krunal patel
+  }
+
+  search_by_name() {
+    List<Contact> contacts_search = [];
+    if (search_controller.text.isNotEmpty) {
+      contacts_search.addAll(_contacts);
+      contacts_search.retainWhere((contact) {
+        return contact.displayName!
+            .toLowerCase()
+            .contains(search_controller.text.toLowerCase());
+      });
+      issearching = true;
+      (VxState.store as MyStore).contacts = contacts_search;
+    } else {
+      (VxState.store as MyStore).contacts = _contacts;
     }
+    setState(() {});
   }
 
   @override
@@ -173,47 +250,44 @@ class _HomePageState extends State<HomePage> {
             .remove((VxState.store as MyStore).contacts.elementAt(i));
       }
     }
-    int n = (VxState.store as MyStore).contacts.length;
-    bool sorted;
-    for (int i = 0; i < n - 1; i++) {
-      sorted = true;
-      for (int j = 0; j < n - 1 - i; j++) {
-        if ((VxState.store as MyStore)
-                .contacts
-                .elementAt(j)
-                .phones!
-                .elementAt(0)
-                .value
-                .toString()
-                .compareTo((VxState.store as MyStore)
-                    .contacts
-                    .elementAt(j + 1)
-                    .phones!
-                    .elementAt(0)
-                    .value
-                    .toString()) >
-            0) {
-          Contact temp = (VxState.store as MyStore).contacts[j];
-          (VxState.store as MyStore).contacts[j] =
-              (VxState.store as MyStore).contacts[j + 1];
-          (VxState.store as MyStore).contacts[j + 1] = temp;
-          sorted = false;
-        }
-      }
-      if (sorted) {
-        break;
-      }
-    }
-    (VxState.store as MyStore)
-        .contacts
-        .remove((VxState.store as MyStore).contacts);
-    (VxState.store as MyStore).contacts.addAll(sorted_contacts);
+    String? _value;
     return contacts_are_loaded
         ? Scaffold(
             backgroundColor: Colors.white,
             body: SafeArea(
               child: Column(
                 children: [
+                  Container(
+                    decoration: BoxDecoration(border: Border.all()),
+                    child: DropdownButton<String>(
+                        isExpanded: true,
+                        value: _value,
+                        items: list
+                            .map((item) => DropdownMenuItem(
+                                value: item,
+                                child: Text(item.toString()).onTap(() {
+                                  _value = item;
+                                })))
+                            .toList(),
+                        onChanged: (value) {
+                          if (value.toString().compareTo("sort by number") ==
+                              0) {
+                            sort_by_number();
+                          }
+                          if (value.toString().compareTo("sort by Z-A") == 0) {
+                            sort_by_Z_to_A();
+                          }
+                          if (value.toString().compareTo("sort by A-Z") == 0) {
+                            sort_by_A_to_Z();
+                          }
+                          if (value.toString().compareTo(
+                                  "sort by length of contact name") ==
+                              0) {
+                            sort_by_length_of_name();
+                          }
+                          setState(() {});
+                        }).p4(),
+                  ).p12(),
                   Container(
                     child: TextField(
                       controller: search_controller,
