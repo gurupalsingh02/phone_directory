@@ -94,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                     .elementAt(j)
                     .displayName
                     .toString())
-                .compareTo((VxState.store as MyStore)
+                .compareToIgnoringCase((VxState.store as MyStore)
                     .contacts
                     .elementAt(j + 1)
                     .displayName
@@ -125,7 +125,7 @@ class _HomePageState extends State<HomePage> {
                     .elementAt(j)
                     .displayName
                     .toString())
-                .compareTo((VxState.store as MyStore)
+                .compareToIgnoringCase((VxState.store as MyStore)
                     .contacts
                     .elementAt(j + 1)
                     .displayName
@@ -237,12 +237,29 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     // TODO: implement build
     for (int i = 0; i < (VxState.store as MyStore).contacts.length; i++) {
-      if ((VxState.store as MyStore).contacts.elementAt(i).phones!.isEmpty ||
+      if ((VxState.store as MyStore)
+              .contacts
+              .elementAt(i)
+              .phones!
+              .elementAt(0)
+              .value
+              .toString()
+              .isEmpty ||
           (VxState.store as MyStore)
               .contacts
               .elementAt(i)
               .displayName!
-              .isEmpty) {
+              .isEmpty ||
+          (VxState.store as MyStore)
+                  .contacts
+                  .elementAt(i)
+                  .phones!
+                  .elementAt(0)
+                  .value
+                  .toString() ==
+              null ||
+          (VxState.store as MyStore).contacts.elementAt(i).displayName ==
+              null) {
         ContactsService.deleteContact(
             (VxState.store as MyStore).contacts.elementAt(i));
         (VxState.store as MyStore)
