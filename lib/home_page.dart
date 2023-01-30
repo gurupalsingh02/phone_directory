@@ -7,6 +7,8 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:permission_asker/permission_asker.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -245,7 +247,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     for (int i = 0; i < (VxState.store as MyStore).contacts.length; i++) {
       if ((VxState.store as MyStore)
               .contacts
@@ -315,18 +316,16 @@ class _HomePageState extends State<HomePage> {
                           setState(() {});
                         }).p4(),
                   ).p12(),
-                  Container(
-                    child: TextField(
-                      controller: search_controller,
-                      decoration: InputDecoration(
-                          prefixIcon: Icon(
-                            Icons.search,
-                            color: Colors.lightBlue,
-                          ),
-                          labelText: "Search",
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.lightBlue))),
-                    ),
+                  TextField(
+                    controller: search_controller,
+                    decoration: InputDecoration(
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: Colors.lightBlue,
+                        ),
+                        labelText: "Search",
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.lightBlue))),
                   ).p16(),
                   ListView.builder(
                       itemCount: (VxState.store as MyStore).contacts.length,
@@ -336,14 +335,13 @@ class _HomePageState extends State<HomePage> {
                           child: VxBox(
                               child: Row(
                             children: [
-                              Container(
-                                child: CircleAvatar(
-                                    child: Text((VxState.store as MyStore)
-                                        .contacts[index]
-                                        .initials()
-                                        .characters
-                                        .elementAt(0))),
-                              ).p8(),
+                              CircleAvatar(
+                                      child: Text((VxState.store as MyStore)
+                                          .contacts[index]
+                                          .initials()
+                                          .characters
+                                          .elementAt(0)))
+                                  .p8(),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [

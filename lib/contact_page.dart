@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 import 'package:flutter/material.dart';
 import 'package:phone_directory/store.dart';
-import 'package:contacts_service/contacts_service.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ContactPage extends StatelessWidget {
